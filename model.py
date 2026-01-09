@@ -25,20 +25,29 @@ class PositionalEncoding(nn.Module):
     self.dropout=nn.Dropout(dropout) ## Dropout stops the model from depending too much on positions
 
     ## create a matrix of shape (seq_len,d_model)
-    pe=torch.zeros(seq_len,d_model)
+    pe=torch.zeros(seq_len,d_model) ## this will hold pe[position][dimension] 
+    ## example: pe[3][10] → value for position 3, dimension 10
+
     ## create a vector of shape (seq_len,1)
     position=torch.arange(0,seq_len,dtype=torch.float).unsqueeze(1) #(seq_len,1)
+    ## This creates different frequencies for each embedding dimension.
+    ## Small index → slow sine wave (global position)
+    ## Large index → fast sine wave (local position)
     div_term=torch.exp(torch.arange(0,d_model,2).float()*(-math.log(10000.0)/d_model))
+
     ## apply sin to even positions
     pe[:,0::2]=torch.sin(position*div_term)
+    
     ## apply cosine to odd psoitions
     pe[:,1::2]=torch.cos(position*div_term)
+
+    ## why sin + cos? Together they uniquely encode positions and help relative comparisons.
 
     pe=pe.unsqueeze(0) # (1,seq_len,d_model)
 
     self.register_buffer('pe',pe)
   
-  def forward(self,x):
+  def forward(self,x): ## forward pass is basically the runtime
     x=x+(self.pe[:,:x.shape[1],:]).requires_grad(False)
     return self.dropout(x)
 
