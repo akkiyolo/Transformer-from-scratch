@@ -52,4 +52,5 @@ class PositionalEncoding(nn.Module):
     return self.dropout(x)
 
 ## layer normalization
+class layerNormalization:
   
