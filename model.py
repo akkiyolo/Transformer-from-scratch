@@ -54,4 +54,4 @@ class PositionalEncoding(nn.Module):
 ## layer normalization
 class layerNormalization:
   def __init__(self):
-    
+    pass
