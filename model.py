@@ -53,5 +53,9 @@ class PositionalEncoding(nn.Module):
 
 ## layer normalization
 class layerNormalization:
-  def __init__(self):
-    pass
+  def __init__(self,d_model:int,eps:float=1e-6):
+    super().__init__()
+    self.d_model=d_model
+    self.eps=eps
+    self.gamma=nn.Parameter(torch.ones(d_model))
+    self.beta=nn.Parameter(torch.zeros(d_model))
